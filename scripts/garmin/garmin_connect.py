@@ -177,6 +177,8 @@ class GarminConnect:
         except Exception as err:
             raise err
     async def download_activity_fit(self, activity_id):
+        if not self.is_login:
+            self.login()
         url = f"{self.modern_url}/proxy/download-service/files/activity/{activity_id}"
         logger.info(f"Download activity from {url}")
         response = await self.req.get(url, headers=self.headers)
@@ -189,9 +191,10 @@ class GarminConnect:
             activity_list = []
             for result in respone:
                 activity_list.append(result.get("activityId"))
-            return activity_list + await self.get_all_activity_list(start + 100)
+            return activity_list + await self.get_all_activity_id_list(start + 100)
         else:
             return []
+
 
 
 
