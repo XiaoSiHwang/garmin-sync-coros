@@ -1,0 +1,33 @@
+# Virtual environment
+bin/
+include/
+lib/
+pyvenv.cfg
+
+.cache
+*.pyc
+node_modules
+yarn-error.log
+
+/public
+# Build directory
+/build
+.DS_Store
+.sass-cache/
+_posts/
+_site/
+
+.mypy_cache
+
+/.vscode
+.idea
+
+.Python
+
+config.yaml
+
+
+/FIT_OUT
+/webdav-db
+/webdav-fit
+/stryd-fit

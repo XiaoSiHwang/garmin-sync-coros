@@ -1,0 +1,56 @@
+name: stryd-sync-garmin
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0,6,19 * * ?'
+env:
+  GITHUB_NAME: XiaoSiHwang
+  GITHUB_EMAIL: 1009326507@qq.com
+  ## 佳明配置
+  GARMIN_AUTH_DOMAIN: ${{ secrets.GARMIN_AUTH_DOMAIN }}
+  GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
+  GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+
+  ## Stryd配置
+  STRYD_EMAIL: ${{ secrets.STRYD_EMAIL }}
+  STRYD_PASSWORD: ${{ secrets.STRYD_PASSWORD }}  
+  
+
+jobs:
+  build:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.8.2
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.8.2"
+    # from pdm
+    - name: Set Variables
+      id: set_variables
+      run: |
+        echo "::set-output name=PY::$(python -c 'import hashlib, sys;print(hashlib.sha256(sys.version.encode()+sys.executable.encode()).hexdigest())')"
+        echo "::set-output name=PIP_CACHE::$(pip cache dir)"        
+    - name: Cache PIP
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.set_variables.outputs.PIP_CACHE }}
+        key: Ubuntu-pip-${{ steps.set_variables.outputs.PY }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt        
+      if: steps.pip-cache.outputs.cache-hit != 'true'
+    - name: Run Garmin Sync
+      run: |
+        python scripts/stryd/stryd_sync_connect.py        
+    - name: Push new cookie
+      run: |
+        git config --local user.email "${{ env.GITHUB_EMAIL }}"
+        git config --local user.name "${{ env.GITHUB_NAME }}"
+        git add .
+        git commit -m 'update garmin cookie' || echo "nothing to commit"
+        git push || echo "nothing to push"        
