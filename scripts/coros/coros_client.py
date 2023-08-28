@@ -67,15 +67,18 @@ class CorosClient:
      
         with open(file_path, 'rb') as f:
             file_data = f.read() 
-        response = self.req.request(
-            method = 'POST',
-            url=upload_url,
-            fields={'sportData': (os.path.basename(file_path), file_data), "jsonParameter": """{"source":1,"timezone":32}"""},
-            headers=headers
-        )
-        upload_response = json.loads(response.data)
-        upload_result = upload_response["result"]
-        return upload_result
+        try:
+          response = self.req.request(
+              method = 'POST',
+              url=upload_url,
+              fields={'sportData': (os.path.basename(file_path), file_data), "jsonParameter": """{"source":1,"timezone":32}"""},
+              headers=headers
+          )
+          upload_response = json.loads(response.data)
+          upload_result = upload_response["result"]
+          return upload_result
+        except Exception as err:
+            exit()
 
 
 

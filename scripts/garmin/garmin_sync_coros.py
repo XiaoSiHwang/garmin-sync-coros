@@ -58,10 +58,14 @@ if __name__ == "__main__":
   loop = asyncio.get_event_loop()
   activity_id_list = loop.run_until_complete(garminConnect.get_all_activity_id_list(0))
 
+  if activity_id_list == None or len(activity_id_list) == 0:
+      exit()
   for activity_id in activity_id_list:
       garmin_db.saveActivity(activity_id)
   
   un_sync_id_list = garmin_db.getUnSyncActivity()
+  if un_sync_id_list == None or len(un_sync_id_list) == 0:
+      exit()
   for un_sync_id in un_sync_id_list:
     file = loop.run_until_complete(garminConnect.download_activity_fit(un_sync_id))
     file_path = os.path.join(GARMIN_FIT_DIR, f"{un_sync_id}.zip")
