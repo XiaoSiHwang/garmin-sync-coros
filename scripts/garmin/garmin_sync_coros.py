@@ -67,11 +67,15 @@ if __name__ == "__main__":
   if un_sync_id_list == None or len(un_sync_id_list) == 0:
       exit()
   for un_sync_id in un_sync_id_list:
-    file = loop.run_until_complete(garminConnect.download_activity_fit(un_sync_id))
-    file_path = os.path.join(GARMIN_FIT_DIR, f"{un_sync_id}.zip")
-    with open(file_path, "wb") as fb:
-        fb.write(file)
-    upload_result = corosClient.uploadActivity(file_path)
-    if upload_result == '0000':
-        garmin_db.updateSyncStatus(un_sync_id)
+    try:
+      file = loop.run_until_complete(garminConnect.download_activity_fit(un_sync_id))
+      file_path = os.path.join(GARMIN_FIT_DIR, f"{un_sync_id}.zip")
+      with open(file_path, "wb") as fb:
+          fb.write(file)
+      upload_result = corosClient.uploadActivity(file_path)
+      if upload_result == '0000':
+          garmin_db.updateSyncStatus(un_sync_id)
+    except Exception as err:
+      print(err)
+      garmin_db.updateExceptionSyncStatus(un_sync_id)
     

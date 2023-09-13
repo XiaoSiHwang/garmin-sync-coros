@@ -42,6 +42,11 @@ class GarminDB:
         update_sql = "update garmin_activity set is_sync_coros = 1 WHERE activity_id = ?"
         with SqliteDB(self._garmin_db_name) as db:
           db.execute(update_sql, (activity_id,))
+    
+    def updateExceptionSyncStatus(self, activity_id:int):
+        update_sql = "update garmin_activity set is_sync_coros = 2 WHERE activity_id = ?"
+        with SqliteDB(self._garmin_db_name) as db:
+          db.execute(update_sql, (activity_id,))
 
     def initDB(self):
       with SqliteDB(os.path.join(DB_DIR, self._garmin_db_name)) as db:
