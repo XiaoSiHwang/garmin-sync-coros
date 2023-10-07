@@ -97,3 +97,4 @@ class GarminNoLoginException(Exception):
         """Initialize."""
         super(GarminNoLoginException, self).__init__(status)
         self.status = status
+
