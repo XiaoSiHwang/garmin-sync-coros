@@ -50,7 +50,7 @@ class CorosClient:
         self.userId = userId
 
     ## 上传运动
-    def uploadActivity(self, file_path):
+    def uploadActivity(self, oss_object):
         ## 判断Token 是否为空
         if self.accessToken == None:
             self.login()
@@ -65,22 +65,31 @@ class CorosClient:
           "accesstoken": self.accessToken,
         }
      
-        with open(file_path, 'rb') as f:
-            file_data = f.read() 
+        # with open(file_path, 'rb') as f:
+        #     file_data = f.read() 
         try:
+          data = {
+              "source": 1,
+              "timezone": 32,
+              "bucket": "coros-oss",
+              "md5": "112",
+              "object": f"{oss_object}",
+              "serviceName": "aliyun",
+              "oriFileName": "17607904418_ACTIVITY.fit"
+          }
+          json_data = json.dumps(data)
+          json_str = str(json_data)
           response = self.req.request(
               method = 'POST',
               url=upload_url,
-              fields={'sportData': (os.path.basename(file_path), file_data), "jsonParameter": """{"source":1,"timezone":32}"""},
+              fields={ "jsonParameter": json_str},
               headers=headers
           )
           upload_response = json.loads(response.data)
           upload_result = upload_response["result"]
           return upload_result
         except Exception as err:
-            exit()
-
-
+            exit() 
 
 
 class CorosLoginError(Exception):
@@ -96,3 +105,4 @@ class CorosActivityUploadError(Exception):
         """Initialize."""
         super(CorosActivityUploadError, self).__init__(status)
         self.status = status
+
