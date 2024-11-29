@@ -1,9 +1,11 @@
 import logging
 import os
 from enum import Enum, auto
-
+import urllib3
+import json
 
 import garth
+
 
 from garmin_url_dict import GARMIN_URL_DICT
 
@@ -27,6 +29,10 @@ class GarminClient:
         if self.auth_domain and str(self.auth_domain).upper() == "CN":
           self.garthClient.configure(domain="garmin.cn")
         self.garthClient.login(self.email, self.password)
+        
+        # del self.garthClient.sess.headers['User-Agent']
+        del self.garthClient.client.sess.headers['User-Agent']
+
       return func(self, *args, **kwargs)
     return ware
   
@@ -41,12 +47,13 @@ class GarminClient:
 
   ## 获取运动
   def getActivities(self, start:int, limit:int):
+     
      params = {"start": str(start), "limit": str(limit)}
      activities =  self.connectapi(path=GARMIN_URL_DICT["garmin_connect_activities"], params=params)
      return activities;
 
   ## 获取所有运动
-  def getAllActivities(self):
+  def getAllActivities(self): 
     all_activities = []
     start = 0
     while(True):
@@ -97,4 +104,3 @@ class GarminNoLoginException(Exception):
         """Initialize."""
         super(GarminNoLoginException, self).__init__(status)
         self.status = status
-
