@@ -4,7 +4,7 @@ import urllib3
 import json
 import hashlib
 
-from coros.entity.login_user import LoginUser
+# from entity.login_user import LoginUser
 
 
 
@@ -59,24 +59,19 @@ class CorosClient:
 
         headers = {
           "Accept":       "application/json, text/plain, */*",
-          "User-Agent":   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.39 Safari/537.36",
-          "referer": "https://trainingcn.coros.com/",
-          "origin": "https://trainingcn.coros.com/",
+          # "User-Agent":   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.39 Safari/537.36",
+          # "referer": "https://t.coros.com/",
+          # "origin": "https://t.coros.com/",
           "accesstoken": self.accessToken,
+          # "content-type": "multipart/form-data"
         }
      
         # with open(file_path, 'rb') as f:
         #     file_data = f.read() 
         try:
-          data = {
-              "source": 1,
-              "timezone": 32,
-              "bucket": "coros-oss",
-              "md5": "112",
-              "object": f"{oss_object}",
-              "serviceName": "aliyun",
-              "oriFileName": "17607904418_ACTIVITY.fit"
-          }
+
+          data = {"source":1,"timezone":32,"bucket":"coros-oss","md5":"123","size":0,"object":f"{oss_object}","serviceName":"aliyun","oriFileName":"a.xx"}
+          
           json_data = json.dumps(data)
           json_str = str(json_data)
           response = self.req.request(
