@@ -1,4 +1,4 @@
-# 佳明数据同步高驰平台脚本（支持国际区与国区）目前高驰上传活动接口已修改所以本脚本暂时无法使用等修复后再使用，不要提交Issue
+# 佳明数据同步高驰平台脚本（支持国际区与国区）目前高驰上传活动接口已修复，重新fork sync代码后删除db/garmin.db文件重跑一遍！！！
 ## 致谢
 - 本脚本佳明模块代码来自@[yihong0618](https://github.com/yihong0618) 的 [running_page](https://github.com/yihong0618/running_page) 个人跑步主页项目,在此非常感谢@[yihong0618](https://github.com/yihong0618)大佬的无私奉献！！！
 
