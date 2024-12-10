@@ -11,7 +11,7 @@ from garmin.garmin_client import GarminClient
 from garmin.garmin_db import GarminDB
 from coros.coros_client import CorosClient
 from oss.ali_oss_client import AliOssClient
-from scripts.utils.md5_utils import calculate_md5_file
+from utils.md5_utils import calculate_md5_file
 
 SYNC_CONFIG = {
     'GARMIN_AUTH_DOMAIN': '',
