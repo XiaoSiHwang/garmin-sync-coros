@@ -11,6 +11,7 @@ from garmin.garmin_client import GarminClient
 from garmin.garmin_db import GarminDB
 from coros.coros_client import CorosClient
 from oss.ali_oss_client import AliOssClient
+from scripts.utils.md5_utils import calculate_md5_file
 
 SYNC_CONFIG = {
     'GARMIN_AUTH_DOMAIN': '',
@@ -48,7 +49,6 @@ if __name__ == "__main__":
   GARMIN_EMAIL = SYNC_CONFIG["GARMIN_EMAIL"]
   GARMIN_PASSWORD = SYNC_CONFIG["GARMIN_PASSWORD"]
   GARMIN_AUTH_DOMAIN = SYNC_CONFIG["GARMIN_AUTH_DOMAIN"]
-
   
   garminClient = GarminClient(GARMIN_EMAIL, GARMIN_PASSWORD, GARMIN_AUTH_DOMAIN)
 
@@ -74,10 +74,11 @@ if __name__ == "__main__":
           fb.write(file)
       client = AliOssClient()
       oss_obj = client.multipart_upload(file_path, f"{un_sync_id}.zip")
-      upload_result = corosClient.uploadActivity(oss_obj)
+      upload_result = corosClient.uploadActivity(oss_obj, calculate_md5_file(file_path), f"{un_sync_id}.zip")
       if upload_result == '0000':
           garmin_db.updateSyncStatus(un_sync_id)
     except Exception as err:
       print(err)
       garmin_db.updateExceptionSyncStatus(un_sync_id)
+      exit()
     

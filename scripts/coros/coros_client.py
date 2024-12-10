@@ -50,7 +50,7 @@ class CorosClient:
         self.userId = userId
 
     ## 上传运动
-    def uploadActivity(self, oss_object):
+    def uploadActivity(self, oss_object, md5, fileName):
         ## 判断Token 是否为空
         if self.accessToken == None:
             self.login()
@@ -59,18 +59,12 @@ class CorosClient:
 
         headers = {
           "Accept":       "application/json, text/plain, */*",
-          # "User-Agent":   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.39 Safari/537.36",
-          # "referer": "https://t.coros.com/",
-          # "origin": "https://t.coros.com/",
           "accesstoken": self.accessToken,
-          # "content-type": "multipart/form-data"
         }
      
-        # with open(file_path, 'rb') as f:
-        #     file_data = f.read() 
         try:
 
-          data = {"source":1,"timezone":32,"bucket":"coros-oss","md5":"123","size":0,"object":f"{oss_object}","serviceName":"aliyun","oriFileName":"a.xx"}
+          data = {"source":1,"timezone":32,"bucket":"coros-oss","md5":f"{md5}","size":0,"object":f"{oss_object}","serviceName":"aliyun","oriFileName":f"{fileName}"}
           
           json_data = json.dumps(data)
           json_str = str(json_data)
