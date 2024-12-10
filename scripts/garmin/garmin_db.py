@@ -26,7 +26,7 @@ class GarminDB:
               db.execute('insert into garmin_activity (activity_id) values (?)', (id,)) 
     
     def getUnSyncActivity(self):
-        select_un_upload_sql = 'SELECT activity_id FROM garmin_activity WHERE is_sync_coros = 0'
+        select_un_upload_sql = 'SELECT activity_id FROM garmin_activity WHERE is_sync_coros = 0 limit 1000'
         with SqliteDB(self._garmin_db_name) as db:
             un_upload_result = db.execute(select_un_upload_sql).fetchall()
             query_size = len(un_upload_result)
