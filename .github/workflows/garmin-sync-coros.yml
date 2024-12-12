@@ -29,7 +29,7 @@ jobs:
       # from pdm
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d %H:%M:%S')"
+        run: echo "::set-output name=PY::$(python -c 'from datetime import datetime; now = datetime.now(); print("now =", now)')"
       - name: Set Variables
         id: set_variables
         run: |
