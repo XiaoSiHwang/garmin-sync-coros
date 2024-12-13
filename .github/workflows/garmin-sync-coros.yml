@@ -5,8 +5,8 @@ on:
   schedule:
     - cron: '0 0,6,19 * * ?'
 env:
-  GITHUB_NAME: XiaoSiHwang
-  GITHUB_EMAIL: 1009326507@qq.com
+  GITHUB_NAME: hubiter
+  GITHUB_EMAIL: tninja@foxmail.com
   ## 佳明配置
   GARMIN_AUTH_DOMAIN: ${{ secrets.GARMIN_AUTH_DOMAIN }}
   GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
