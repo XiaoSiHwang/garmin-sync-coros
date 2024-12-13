@@ -13,11 +13,12 @@ logger = logging.getLogger(__name__)
 
 
 class GarminClient:
-  def __init__(self, email, password, auth_domain):
+  def __init__(self, email, password, auth_domain, newest_num):
         self.auth_domain = auth_domain
         self.email = email
         self.password = password
         self.garthClient = garth
+        self.newestNum = newest_num
   
   ## 登录装饰器
   def login(func):    
@@ -60,6 +61,8 @@ class GarminClient:
       activities = self.getActivities(start=start, limit=100)
       if len(activities) > 0:
          all_activities.extend(activities)
+      else if start >= self.newestNum:
+         return all_activities
       else:
          return all_activities
       start += 100
