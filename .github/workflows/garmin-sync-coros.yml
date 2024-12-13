@@ -11,6 +11,7 @@ env:
   GARMIN_AUTH_DOMAIN: ${{ secrets.GARMIN_AUTH_DOMAIN }}
   GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
   GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+  GARMIN_NEWEST_NUM: ${{ secrets.GARMIN_NEWEST_NUM }}
 
   ## Coros配置
   COROS_EMAIL: ${{ secrets.COROS_EMAIL }}
