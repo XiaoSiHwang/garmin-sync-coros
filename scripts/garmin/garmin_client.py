@@ -18,7 +18,7 @@ class GarminClient:
         self.email = email
         self.password = password
         self.garthClient = garth
-        self.newestNum = int(newest_num)
+        self.newestNum = newest_num
   
   ## 登录装饰器
   def login(func):    
