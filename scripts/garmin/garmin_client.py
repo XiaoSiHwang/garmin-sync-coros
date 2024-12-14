@@ -58,7 +58,7 @@ class GarminClient:
     all_activities = []
     start = 0
     limit=100
-    if self.newestNum > 0 && self.newestNum < 100:
+    if 0 < self.newestNum < 100:
       limit = self.newestNum
       
     while(True):
@@ -66,7 +66,7 @@ class GarminClient:
       if len(activities) > 0:
         all_activities.extend(activities)
         
-        if (self.newestNum > 0 && self.newestNum < 100) || start > self.newestNum:
+        if 0 < self.newestNum < 100 or start > self.newestNum:
            return all_activities
       else:
          return all_activities
