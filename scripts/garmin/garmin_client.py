@@ -62,7 +62,7 @@ class GarminClient:
       limit = self.newestNum
       
     while(True):
-      activities = self.getActivities(start=start, limit)
+      activities = self.getActivities(start=start, limit=limit)
       if len(activities) > 0:
         all_activities.extend(activities)
         
