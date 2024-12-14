@@ -57,15 +57,20 @@ class GarminClient:
   def getAllActivities(self): 
     all_activities = []
     start = 0
+    limit=100
+    if self.newestNum > 0 && self.newestNum < 100:
+      limit = self.newestNum
+      
     while(True):
-      activities = self.getActivities(start=start, limit=100)
+      activities = self.getActivities(start=start, limit)
       if len(activities) > 0:
-         all_activities.extend(activities)
-      elif start >= self.newestNum:
-         return all_activities
+        all_activities.extend(activities)
+        
+        if (self.newestNum > 0 && self.newestNum < 100) || start > self.newestNum:
+           return all_activities
       else:
          return all_activities
-      start += 100
+      start += limit
 
   ## 下载原始格式的运动
   def downloadFitActivity(self, activity):
