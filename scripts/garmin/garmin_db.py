@@ -1,7 +1,4 @@
 import os
-import sys 
-
-import sqlite3
 from sqlite_db import  SqliteDB
 from config import DB_DIR
 
