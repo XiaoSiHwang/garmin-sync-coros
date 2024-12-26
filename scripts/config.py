@@ -14,5 +14,6 @@ parent = os.path.dirname(current)
 
 
 GARMIN_FIT_DIR = os.path.join(parent, "garmin-fit")
+COROS_FIT_DIR = os.path.join(parent, "coros-fit")
 
 DB_DIR =  os.path.join(parent, "db")

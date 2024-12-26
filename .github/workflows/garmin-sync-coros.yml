@@ -15,6 +15,9 @@ env:
   ## Coros配置
   COROS_EMAIL: ${{ secrets.COROS_EMAIL }}
   COROS_PASSWORD: ${{ secrets.COROS_PASSWORD }}
+  ### 按需选择，如果选择 garmin_to_coros 佳明同步高驰
+  ### 如果选择 coros_to_garmin 高驰同步佳明
+  RUN_TYPE: coros_to_garmin # garmin_to_coros 佳明同步高驰、 coros_to_garmin
 
 jobs:
   build:
@@ -42,13 +45,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
         if: steps.pip-cache.outputs.cache-hit != 'true'
-      - name: Run Garmin Sync
+      - name: Run Garmin Sync Coros
+        if: env.RUN_TYPE == 'garmin_to_coros'
         run: |
           python scripts/garmin/garmin_sync_coros.py
+      - name: Run Coros  Sync  Garmin
+        if: env.RUN_TYPE == 'coros_to_garmin'
+        run: |
+          python scripts/coros/coros_sync_garmin.py
       - name: Push new cookie
         run: |
           git config --local user.email "${{ env.GITHUB_EMAIL }}"
           git config --local user.name "${{ env.GITHUB_NAME }}"
           git add .
-          git commit -m 'update garmin activity' || echo "nothing to commit"
+          git commit -m 'faet(sync): new upload activity' || echo "nothing to commit"
           git push || echo "nothing to push"
