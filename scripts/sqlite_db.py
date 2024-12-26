@@ -1,7 +1,7 @@
 import sqlite3
 import traceback
 import os
-from .config import DB_DIR
+from config import DB_DIR
 
 
 class SqliteDB(object):

@@ -5,11 +5,10 @@ CURRENT_DIR = os.path.split(os.path.abspath(__file__))[0]  # 当前目录
 config_path = CURRENT_DIR.rsplit('/', 1)[0]  # 上三级目录
 sys.path.append(config_path)
 
-from scripts.coros.coros_client import CorosClient
-from scripts.config  import DB_DIR, COROS_FIT_DIR
-from scripts.coros.coros_db import CorosDB
-from scripts.sqlite_db import SqliteDB
-from scripts.garmin.garmin_client import GarminClient
+from coros_client import CorosClient
+from config  import DB_DIR, COROS_FIT_DIR
+from coros_db import CorosDB
+from garmin.garmin_client import GarminClient
 
 
 SYNC_CONFIG = {

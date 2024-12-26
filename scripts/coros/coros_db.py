@@ -1,6 +1,6 @@
 import os
-from ..sqlite_db import  SqliteDB
-from ..config import DB_DIR
+from sqlite_db import  SqliteDB
+from config import DB_DIR
 
 
 class CorosDB:
