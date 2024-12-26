@@ -17,7 +17,7 @@ env:
   COROS_PASSWORD: ${{ secrets.COROS_PASSWORD }}
   ### 按需选择，如果选择 garmin_to_coros 佳明同步高驰
   ### 如果选择 coros_to_garmin 高驰同步佳明
-  RUN_TYPE: garmin_to_coros # garmin_to_coros 佳明同步高驰、 coros_to_garmin
+  RUN_TYPE: coros_to_garmin # garmin_to_coros 佳明同步高驰、 coros_to_garmin
 
 jobs:
   build:
