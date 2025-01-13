@@ -31,3 +31,5 @@ config.yaml
 /webdav-db
 /webdav-fit
 /garmin-fit
+/coros-fit
+db/garmin.db

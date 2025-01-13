@@ -1,11 +1,6 @@
-import os
-
 import urllib3
 import json
 import hashlib
-
-# from entity.login_user import LoginUser
-
 
 
 class CorosClient:
@@ -80,7 +75,68 @@ class CorosClient:
         except Exception as err:
             exit() 
 
+    def getActivities(self, size:int, page:int):
+        self.checkToken()
+        activitys_url = f"https://teamcnapi.coros.com/activity/query?size={size}&pageNumber={page}"
+        headers = {
+          "Accept":       "application/json, text/plain, */*",
+          "accesstoken": self.accessToken,
+        }
+        try:
+          response = self.req.request(
+              method = 'GET',
+              url=activitys_url,
+              headers=headers
+          )
+          response = json.loads(response.data)
+          return response
+        except Exception as err:
+            exit() 
+     ## 获取所有运动
+    def getAllActivities(self): 
+      all_activities = []
+      size = 200
+      page = 1
+      while(True):
+        activities = self.getActivities(size, page)
+        totalPage = activities['data']['totalPage']
+        if totalPage >= page:
+          all_activities.extend(activities['data']['dataList'])
+        else:
+          return all_activities
+        page += 1
+    
 
+    def downloadActivitie(self, id, sport_type):
+       self.checkToken()
+       ## 文件下载链接
+       get_activity_download_url = f"https://teamcnapi.coros.com/activity/detail/download?labelId={id}&sportType={sport_type}&fileType=4"
+       headers = {
+          "Accept":       "application/json, text/plain, */*",
+          "accesstoken": self.accessToken,
+       }
+       try:
+          get_activity_download_url_response = self.req.request(
+              method = 'POST',
+              url=get_activity_download_url,
+              headers=headers
+          )
+          get_activity_download_url_response_json = json.loads(get_activity_download_url_response.data)
+          download_url = get_activity_download_url_response_json['data']['fileUrl']
+          return self.req.request(
+              method = 'GET',
+              url=download_url,
+              headers=headers
+          )
+       except Exception as err:
+            exit() 
+       pass
+
+    ## 检查token是否有效
+    def checkToken(self):
+        ## 判断Token 是否为空
+        if self.accessToken == None:
+            self.login()
 class CorosLoginError(Exception):
 
     def __init__(self, status):
