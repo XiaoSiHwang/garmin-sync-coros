@@ -45,7 +45,7 @@ class CorosClient:
         self.userId = userId
 
     ## 上传运动
-    def uploadActivity(self, oss_object, md5, fileName):
+    def uploadActivity(self, oss_object, md5, fileName, size):
         ## 判断Token 是否为空
         if self.accessToken == None:
             self.login()
@@ -59,10 +59,10 @@ class CorosClient:
      
         try:
 
-          data = {"source":1,"timezone":32,"bucket":"coros-oss","md5":f"{md5}","size":0,"object":f"{oss_object}","serviceName":"aliyun","oriFileName":f"{fileName}"}
-          
+          data = {"source":1,"timezone":32,"bucket":"coros-oss","md5":f"{md5}","size":size,"object":f"{oss_object}","serviceName":"aliyun","oriFileName":f"{fileName}"}
           json_data = json.dumps(data)
           json_str = str(json_data)
+          print(json_str)
           response = self.req.request(
               method = 'POST',
               url=upload_url,
@@ -70,8 +70,11 @@ class CorosClient:
               headers=headers
           )
           upload_response = json.loads(response.data)
-          upload_result = upload_response["result"]
-          return upload_result
+          print(upload_response)
+          if upload_response["data"].get("status") == 2 and  upload_response["result"] == "0000":
+             return True
+          else:
+             return False
         except Exception as err:
             exit() 
 

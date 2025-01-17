@@ -69,7 +69,7 @@ class AliOssClient:
         headers = dict()
         # 设置文件访问权限ACL。此处设置为OBJECT_ACL_PRIVATE，表示私有权限。
         # headers["x-oss-object-acl"] = oss2.OBJECT_ACL_PRIVATE
-        self.client.complete_multipart_upload(key, upload_id, parts, headers=headers)
+        r = self.client.complete_multipart_upload(key, upload_id, parts, headers=headers)
         return key
     
 
