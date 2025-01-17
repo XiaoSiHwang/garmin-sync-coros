@@ -11,6 +11,7 @@
 |    GARMIN_EMAIL    |          佳明登录帐号邮箱          |             |
 |  GARMIN_PASSWORD   |            佳明登录密码            |             |
 | GARMIN_AUTH_DOMAIN | 佳明区域（国际区填:COM 国区填:CN） | (COM or CN) |
+| GARMIN_NEWEST_NUM  | 最新记录条数                     | (默认0，可写大于0) |
 |    COROS_EMAIL     |           高驰 登录邮箱           |             |
 |   COROS_PASSWORD   |             高驰 密码             |             |
 
