@@ -9,7 +9,7 @@ corosClient.login()
 print(corosClient.userId)
 # corosClient.uploadActivity("fit_zip/58a0fa43058a4aaf84d2564ead944271.fit", calculate_md5_file("garmin-fit/58a0fa43058a4aaf84d2564ead944271.fit"), "58a0fa43058a4aaf84d2564ead944271.fit")
 client = AliOssClient()
-file_path = 'garmin-fit/17979659691.zip'
+file_path = 'garmin-fit/18008793949.zip'
 import os
 size = os.path.getsize(file_path) # 文件路径及文件名
 print(size)

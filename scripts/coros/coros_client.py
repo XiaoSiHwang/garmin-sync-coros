@@ -2,6 +2,8 @@ import urllib3
 import json
 import hashlib
 
+from .region_config import REGIONCONFIG
+from .sts_config import STS_CONFIG
 
 class CorosClient:
     
@@ -12,10 +14,12 @@ class CorosClient:
         self.req = urllib3.PoolManager()
         self.accessToken = None
         self.userId = None
+        self.regionId = None
+        self.teamapi = None
     
     ## 登录接口
     def login(self):
-        
+        ## default use com login url
         login_url = "https://teamcnapi.coros.com/account/login"
 
         login_data = {
@@ -27,8 +31,8 @@ class CorosClient:
           "Accept":       "application/json, text/plain, */*",
           "Content-Type": "application/json;charset=UTF-8",
           "User-Agent":   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.39 Safari/537.36",
-          "referer": "https://trainingcn.coros.com/",
-          "origin": "https://trainingcn.coros.com/",
+          "referer": "https://teamcnapi.coros.com/",
+          "origin": "https://teamcnapi.coros.com/",
         }
 
         login_body = json.dumps(login_data)
@@ -37,12 +41,15 @@ class CorosClient:
         login_response = json.loads(response.data)
         login_result = login_response["result"]
         if login_result != "0000":
-            raise CorosLoginError("高驰登录异常，异常原因为：" + login_response["message"])
+            raise CorosLoginError("Coros login anomaly, the reason for the anomaly is:" + login_response["message"])
 
         accessToken = login_response["data"]["accessToken"]
         userId =  login_response["data"]["userId"]
+        regionId =  login_response["data"]["regionId"]
         self.accessToken = accessToken
         self.userId = userId
+        self.regionId = regionId
+        self.teamapi = REGIONCONFIG[self.regionId]['teamapi']
 
     ## 上传运动
     def uploadActivity(self, oss_object, md5, fileName, size):
@@ -50,7 +57,7 @@ class CorosClient:
         if self.accessToken == None:
             self.login()
 
-        upload_url = "https://teamcnapi.coros.com/activity/fit/import"
+        upload_url = f"{self.teamapi}/activity/fit/import"
 
         headers = {
           "Accept":       "application/json, text/plain, */*",
@@ -59,7 +66,7 @@ class CorosClient:
      
         try:
 
-          data = {"source":1,"timezone":32,"bucket":"coros-oss","md5":f"{md5}","size":size,"object":f"{oss_object}","serviceName":"aliyun","oriFileName":f"{fileName}"}
+          data = {"source":1,"timezone":32,"bucket":f"{STS_CONFIG[self.regionId]["bucket"]}","md5":f"{md5}","size":size,"object":f"{oss_object}","serviceName":f"{STS_CONFIG[self.regionId]["service"]}","oriFileName":f"{fileName}"}
           json_data = json.dumps(data)
           json_str = str(json_data)
           print(json_str)
@@ -80,7 +87,7 @@ class CorosClient:
 
     def getActivities(self, size:int, page:int):
         self.checkToken()
-        activitys_url = f"https://teamcnapi.coros.com/activity/query?size={size}&pageNumber={page}"
+        activitys_url = f"{self.teamapi}/activity/query?size={size}&pageNumber={page}"
         headers = {
           "Accept":       "application/json, text/plain, */*",
           "accesstoken": self.accessToken,
@@ -113,7 +120,7 @@ class CorosClient:
     def downloadActivitie(self, id, sport_type):
        self.checkToken()
        ## 文件下载链接
-       get_activity_download_url = f"https://teamcnapi.coros.com/activity/detail/download?labelId={id}&sportType={sport_type}&fileType=4"
+       get_activity_download_url = f"{self.teamapi}/activity/detail/download?labelId={id}&sportType={sport_type}&fileType=4"
        headers = {
           "Accept":       "application/json, text/plain, */*",
           "accesstoken": self.accessToken,
