@@ -65,8 +65,9 @@ class CorosClient:
         }
      
         try:
-
-          data = {"source":1,"timezone":32,"bucket":f"{STS_CONFIG[self.regionId]["bucket"]}","md5":f"{md5}","size":size,"object":f"{oss_object}","serviceName":f"{STS_CONFIG[self.regionId]["service"]}","oriFileName":f"{fileName}"}
+          bucket = STS_CONFIG[self.regionId]["bucket"]
+          serviceName = STS_CONFIG[self.regionId]["service"]
+          data = {"source":1,"timezone":32,"bucket":f"{bucket}","md5":f"{md5}","size":size,"object":f"{oss_object}","serviceName":f"{serviceName}","oriFileName":f"{fileName}"}
           json_data = json.dumps(data)
           json_str = str(json_data)
           print(json_str)
@@ -160,4 +161,3 @@ class CorosActivityUploadError(Exception):
         """Initialize."""
         super(CorosActivityUploadError, self).__init__(status)
         self.status = status
-
