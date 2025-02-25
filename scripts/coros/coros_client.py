@@ -2,8 +2,8 @@ import urllib3
 import json
 import hashlib
 
-from .region_config import REGIONCONFIG
-from .sts_config import STS_CONFIG
+from coros.region_config import REGIONCONFIG
+from coros.sts_config import STS_CONFIG
 
 class CorosClient:
     
