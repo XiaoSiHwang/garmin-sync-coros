@@ -7,7 +7,7 @@ from oss2 import SizedFileAdapter, determine_part_size
 from oss2.models import PartInfo
 
 class AliOssClient:
-    def __init__(self, bucket="coros-oss", service="aliyun", app_id="1660188068672619112", sign="24452E2822F60D31A075FE07030AD018"):
+    def __init__(self, bucket="coros-oss", service="aliyun", app_id="1660188068672619112", sign="9AD4AA35AAFEE6BB1E847A76848D58DF"):
         self.bucket = bucket
         self.service = service
         self.app_id = app_id
