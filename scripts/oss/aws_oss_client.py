@@ -1,6 +1,8 @@
 import urllib3
 import json
 import boto3
+import certifi
+
 from boto3.s3.transfer import TransferConfig
 
 
@@ -16,7 +18,7 @@ class AwsOssClient:
     self.credentials = None
     self.access_key_id = None
     self.access_key_secret = None
-    self.req = urllib3.PoolManager()
+    self.req = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
     self.v = v
     self.client = None
     self.initClient()

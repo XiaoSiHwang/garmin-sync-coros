@@ -2,12 +2,15 @@ import urllib3
 import json
 import oss2
 import os
+import certifi
 
 from oss2 import SizedFileAdapter, determine_part_size
 from oss2.models import PartInfo
+from utils.coros_oss_credients_utils import decode
+
 
 class AliOssClient:
-    def __init__(self, bucket="coros-oss", service="aliyun", app_id="1660188068672619112", sign="9AD4AA35AAFEE6BB1E847A76848D58DF"):
+    def __init__(self, bucket="coros-oss", service="aliyun", app_id="1660188068672619112", sign="9AD4AA35AAFEE6BB1E847A76848D58DF", v=2):
         self.bucket = bucket
         self.service = service
         self.app_id = app_id
@@ -15,22 +18,26 @@ class AliOssClient:
         self.security_token = None
         self.access_key_id = None
         self.access_key_secret = None
-        self.req = urllib3.PoolManager()
+        self.req = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
         self.client = None
+        self.v = v
         self.initClient()
 
     def initClient(self):
-        sts_token_url = f"https://faq.coros.com/openapi/oss/sts?bucket={self.bucket}&service={self.service}&app_id={self.app_id}&sign={self.sign}"
+        sts_token_url = f"https://faq.coros.com/openapi/oss/sts?bucket={self.bucket}&service={self.service}&app_id={self.app_id}&sign={self.sign}&v={self.v}"
 
         response = self.req.request('GET', sts_token_url)
 
         sts_token_response = json.loads(response.data)
         if sts_token_response["code"] != 200:
             raise StsTokenError("获取阿里云OSS STS Token异常")
+        credentials = sts_token_response["data"]["credentials"]
+        credients_json = decode(credentials)
 
-        SecurityToken = sts_token_response["data"]["SecurityToken"]
-        AccessKeyId = sts_token_response["data"]["AccessKeyId"]
-        AccessKeySecret = sts_token_response["data"]["AccessKeySecret"]
+
+        SecurityToken = credients_json["SecurityToken"]
+        AccessKeyId = credients_json["AccessKeyId"]
+        AccessKeySecret = credients_json["AccessKeySecret"]
         self.security_token = SecurityToken
         self.access_key_id = AccessKeyId
         self.access_key_secret = AccessKeySecret
