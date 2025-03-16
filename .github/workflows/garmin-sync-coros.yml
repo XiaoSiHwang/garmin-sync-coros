@@ -14,8 +14,8 @@ env:
   GARMIN_NEWEST_NUM: 1
 
   ## Coros配置
-  COROS_EMAIL: ${{ secrets.COROS_EMAIL }}
-  COROS_PASSWORD: ${{ secrets.COROS_PASSWORD }}
+  COROS_EMAIL: 15108466849
+  COROS_PASSWORD: gc08241004
 
 jobs:
   build:
