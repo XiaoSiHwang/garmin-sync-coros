@@ -10,34 +10,54 @@ from utils.coros_oss_credients_utils import decode
 
 
 class AliOssClient:
-    def __init__(self, bucket="coros-oss", service="aliyun", app_id="1660188068672619112", sign="9AD4AA35AAFEE6BB1E847A76848D58DF", v=2):
+    def __init__(self, bucket="coros-oss", service="aliyun", app_id="1660188068672619112", sign="9AD4AA35AAFEE6BB1E847A76848D58DF", v=2, access_token=None):
         self.bucket = bucket
         self.service = service
         self.app_id = app_id
         self.sign = sign
+        self.v = v
+        self.access_token = access_token
         self.security_token = None
         self.access_key_id = None
         self.access_key_secret = None
         self.req = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
         self.client = None
-        self.v = v
         self.initClient()
 
     def initClient(self):
-        sts_token_url = f"https://faq.coros.com/openapi/oss/sts?bucket={self.bucket}&service={self.service}&app_id={self.app_id}&sign={self.sign}&v={self.v}"
+        base_query = f"bucket={self.bucket}&service={self.service}&v={self.v}"
+        ## 2026-10-03 起 COROS 关闭免登录 STS 通道(旧 faq.coros.com/openapi/oss/sts 已下线)，
+        ## 网页版训练中心改走 BFF 代理 /api/proxy/oss/sts，用登录 accessToken 作 CPL-coros-token cookie 鉴权
+        sts_calls = []
+        if self.access_token:
+            sts_calls.append((
+                f"https://trainingcn.coros.com/api/proxy/oss/sts?{base_query}",
+                {"Cookie": f"CPL-coros-token={self.access_token}"},
+            ))
+        ## 旧免登录通道保留作回退(当前已 404)
+        sts_calls.append((
+            f"https://faq.coros.com/openapi/oss/sts?{base_query}&app_id={self.app_id}&sign={self.sign}",
+            {},
+        ))
 
-        response = self.req.request('GET', sts_token_url)
-
-        sts_token_response = json.loads(response.data)
-        if sts_token_response["code"] != 200:
+        sts_token_response = None
+        for sts_token_url, extra_headers in sts_calls:
+            response = self.req.request('GET', sts_token_url, headers=extra_headers)
+            try:
+                parsed = json.loads(response.data)
+            except ValueError:
+                continue
+            if parsed.get("code") == 200 and parsed.get("data", {}).get("credentials"):
+                sts_token_response = parsed
+                break
+        if sts_token_response is None:
             raise StsTokenError("获取阿里云OSS STS Token异常")
         credentials = sts_token_response["data"]["credentials"]
         credients_json = decode(credentials)
 
-
-        SecurityToken = credients_json["SecurityToken"]
-        AccessKeyId = credients_json["AccessKeyId"]
-        AccessKeySecret = credients_json["AccessKeySecret"]
+        SecurityToken = credients_json.get("SecurityToken") or credients_json.get("SessionToken")
+        AccessKeyId = credients_json.get("AccessKeyId")
+        AccessKeySecret = credients_json.get("AccessKeySecret") or credients_json.get("SecretAccessKey")
         self.security_token = SecurityToken
         self.access_key_id = AccessKeyId
         self.access_key_secret = AccessKeySecret
