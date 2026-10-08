@@ -88,12 +88,13 @@ if __name__ == "__main__":
       
     except Exception as err:
       print(err)
+  sync_failed = False
   for un_sync_info in file_path_list:
     try:
       client = None
-      ## 中国区使用阿里云OSS
+      ## 中国区使用阿里云OSS (STS 凭证需登录 token 鉴权)
       if corosClient.regionId == 2:
-         client = AliOssClient()
+         client = AliOssClient(access_token=corosClient.accessToken)
       elif corosClient.regionId == 1 or corosClient.regionId == 3:
          client = AwsOssClient()
 
@@ -107,4 +108,6 @@ if __name__ == "__main__":
     except Exception as err:
       print(err)
       garmin_db.updateExceptionSyncStatus(un_sync_id)
-      exit()
+      sync_failed = True
+  if sync_failed:
+    sys.exit(1)
